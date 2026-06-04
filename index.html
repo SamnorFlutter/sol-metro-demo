@@ -63,8 +63,9 @@
   @keyframes bk{0%,100%{opacity:1}50%{opacity:.45}}
 
   /* ---------- Stage / screens ---------- */
-  .stage{flex:1;position:relative;overflow:hidden}
-  .screen{position:absolute;inset:0;padding:30px 38px 34px;overflow-y:auto;display:flex;flex-direction:column;gap:24px;animation:in .32s cubic-bezier(.2,.7,.2,1) both}
+  .stagewrap{flex:1;position:relative;overflow:hidden}
+  .stage{position:absolute;inset:0;overflow:hidden}
+  .screen{position:absolute;inset:0;padding:30px 226px 34px 38px;overflow-y:auto;display:flex;flex-direction:column;gap:24px;animation:in .32s cubic-bezier(.2,.7,.2,1) both}
   @keyframes in{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
   .screen.back{animation:inb .32s cubic-bezier(.2,.7,.2,1) both}
   @keyframes inb{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
@@ -267,11 +268,14 @@
   .confirm.info h2,.confirm.info p{color:var(--primary-d)}
 
   /* sign-language accompaniment bar + avatar */
-  .signbar{display:flex;align-items:center;gap:18px;padding:14px 24px;background:linear-gradient(90deg,#F2EAFD,#FAF7FE);border-top:1px solid var(--sol-soft);flex:none}
-  .sign-stage{position:relative;width:132px;height:132px;border-radius:18px;overflow:hidden;background:#fff;flex:none;box-shadow:var(--shadow-soft);display:grid;place-items:center}
+  .signpip{position:absolute;top:16px;right:16px;width:194px;z-index:30;background:#fff;border:1px solid #e4d6fa;border-radius:20px;box-shadow:var(--shadow-hi);padding:12px;display:flex;flex-direction:column;gap:8px}
+  .pip-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .pip-badge{font-size:11px;font-weight:800;color:var(--sol-d);text-transform:uppercase;letter-spacing:.2px;line-height:1.15}
+  .pip-demo{font-size:10px;font-weight:800;color:var(--warn);background:var(--warn-soft);padding:2px 6px;border-radius:6px;flex:none}
+  .sign-stage{position:relative;width:100%;height:168px;border-radius:14px;overflow:hidden;background:#fff;box-shadow:var(--shadow-soft);display:grid;place-items:center}
   .bar-clip{width:100%;height:100%;object-fit:contain;background:#fff;display:none}
   .sign-av{flex:none}
-  .sign-stage .sign-av{width:104px;height:104px}
+  .sign-stage .sign-av{width:120px;height:120px}
   .sign-av.big{width:160px;height:160px}
   .avt{width:100%;height:100%;display:block}
   .avt-bg{fill:#E7D8FB}
@@ -282,13 +286,12 @@
   .playing .h-r{animation:hr 1.15s ease-in-out infinite .18s}
   @keyframes hl{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(2px,-11px) rotate(-8deg)}}
   @keyframes hr{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(-2px,-13px) rotate(8deg)}}
-  .sign-mid{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
-  .sign-badge{font-size:12px;font-weight:800;color:var(--sol-d);letter-spacing:.3px;text-transform:uppercase}
-  .sign-badge b{background:var(--warn-soft);color:var(--warn);padding:2px 7px;border-radius:6px;margin-left:5px;font-weight:800}
-  .sign-cap{font-size:19px;font-weight:800;color:var(--ink);line-height:1.2}
-  .sign-src{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:3px}
-  .sign-expand{flex:none;background:#fff;border:1.5px solid #d9c5f5;color:var(--sol-d);font-weight:800;font-size:14px;padding:12px 16px;border-radius:13px;cursor:pointer;transition:.15s}
+  .sign-cap{font-size:14.5px;font-weight:800;color:var(--ink);line-height:1.22}
+  .sign-src{font-size:10.5px;color:var(--muted);font-weight:600;line-height:1.25}
+  .sign-expand{background:#fff;border:1.5px solid #d9c5f5;color:var(--sol-d);font-weight:800;font-size:13px;padding:9px;border-radius:11px;cursor:pointer;transition:.15s}
   .sign-expand:hover{border-color:var(--sol);box-shadow:var(--shadow-soft)}
+  @media(max-width:820px){.signpip{width:152px;top:12px;right:12px}.signpip .sign-stage{height:122px}.screen{padding-right:180px}}
+  @media(max-width:560px){.signpip{width:120px}.signpip .sign-stage{height:96px}.signpip .sign-cap,.signpip .sign-src{display:none}.screen{padding-right:144px}}
   .sign-video{background:linear-gradient(160deg,#EFE6FC,#d6c2f5)!important}
   .sign-note{font-size:14px!important;color:var(--warn)!important;background:var(--warn-soft);padding:13px 15px;border-radius:12px;line-height:1.45;font-weight:600}
   .sign-clip{width:100%;height:100%;object-fit:contain;background:#fff;display:none}
@@ -310,19 +313,18 @@
     <div class="status"><span class="dot"></span> Онлайн</div>
   </header>
 
-  <div class="stage" id="stage"></div>
-
-  <div class="signbar">
-    <div class="sign-stage">
-      <video id="barVideo" class="bar-clip" muted loop autoplay playsinline preload="auto"></video>
-      <div class="sign-av playing" id="barAvatar">{avatar}</div>
-    </div>
-    <div class="sign-mid">
-      <span class="sign-badge">Жестовый язык · РЖЯ <b>демо</b></span>
+  <div class="stagewrap">
+    <div class="stage" id="stage"></div>
+    <div class="signpip">
+      <div class="pip-head"><span class="pip-badge">Жестовый язык · РЖЯ</span><span class="pip-demo">демо</span></div>
+      <div class="sign-stage">
+        <video id="barVideo" class="bar-clip" muted loop autoplay playsinline preload="auto"></video>
+        <div class="sign-av playing" id="barAvatar">{avatar}</div>
+      </div>
       <span class="sign-cap" id="signCap">Жестовое сопровождение</span>
       <span class="sign-src" id="signSrc"></span>
+      <button class="sign-expand" onclick="openSign()">⤢ Крупно</button>
     </div>
-    <button class="sign-expand" onclick="openSign()">⤢ Крупно</button>
   </div>
 
   <footer class="bar">
