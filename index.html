@@ -266,6 +266,28 @@
   .confirm.info .big-ico svg{color:var(--primary)}
   .confirm.info h2,.confirm.info p{color:var(--primary-d)}
 
+  /* sign-language accompaniment bar + avatar */
+  .signbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:linear-gradient(90deg,#F2EAFD,#FAF7FE);border-top:1px solid var(--sol-soft);cursor:pointer;flex:none;transition:background .15s}
+  .signbar:hover{background:#EFE6FC}
+  .sign-av{width:54px;height:54px;flex:none}
+  .sign-av.big{width:154px;height:154px}
+  .avt{width:100%;height:100%;display:block}
+  .avt-bg{fill:#E7D8FB}
+  .avt-body{fill:#7A3CE0}
+  .avt-skin{fill:#F1C9A4;stroke:#d6a47c;stroke-width:1.1}
+  .avt-hand{transform-box:fill-box;transform-origin:center}
+  .playing .h-l{animation:hl 1.15s ease-in-out infinite}
+  .playing .h-r{animation:hr 1.15s ease-in-out infinite .18s}
+  @keyframes hl{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(2px,-11px) rotate(-8deg)}}
+  @keyframes hr{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(-2px,-13px) rotate(8deg)}}
+  .sign-mid{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+  .sign-badge{font-size:12px;font-weight:800;color:var(--sol-d);letter-spacing:.3px;text-transform:uppercase}
+  .sign-badge b{background:var(--warn-soft);color:var(--warn);padding:2px 7px;border-radius:6px;margin-left:5px;font-weight:800}
+  .sign-cap{font-size:17px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sign-cta{flex:none;background:linear-gradient(135deg,#8a4ef0,#6a2fce);color:#fff;font-weight:800;font-size:15px;padding:12px 18px;border-radius:14px;box-shadow:0 6px 16px rgba(122,60,224,.3)}
+  .sign-video{background:linear-gradient(160deg,#EFE6FC,#d6c2f5)!important}
+  .sign-note{font-size:14px!important;color:var(--warn)!important;background:var(--warn-soft);padding:13px 15px;border-radius:12px;line-height:1.45;font-weight:600}
+
   .credit{position:absolute;bottom:7px;right:14px;font-size:11px;color:var(--muted);opacity:.5;z-index:1;font-weight:500}
 </style>
 </head>
@@ -283,6 +305,15 @@
   </header>
 
   <div class="stage" id="stage"></div>
+
+  <div class="signbar" onclick="openSign()">
+    <div class="sign-av playing">{avatar}</div>
+    <div class="sign-mid">
+      <span class="sign-badge">Жестовый язык · РЖЯ <b>демо</b></span>
+      <span class="sign-cap" id="signCap">Жестовое сопровождение</span>
+    </div>
+    <span class="sign-cta">Смотреть ▶</span>
+  </div>
 
   <footer class="bar">
     <button class="fbtn back" id="backBtn" onclick="back()"><span class="ico">{back}</span> Назад</button>
@@ -305,6 +336,21 @@
     </div>
   </div>
 
+  <div class="overlay" id="signOverlay">
+    <div class="modal">
+      <div class="video sign-video">
+        <div class="live">РЖЯ · демонстрация</div>
+        <div class="sign-av big playing">{avatar}</div>
+      </div>
+      <div class="body">
+        <h3>Жестовое сопровождение</h3>
+        <p id="signModalCap">…</p>
+        <p class="sign-note">⚠ Демонстрационный цифровой аватар. В рабочей версии здесь — видеоролик на русском жестовом языке (РЖЯ) для этого шага, снятый и проверенный носителем языка.</p>
+        <button class="close" onclick="closeSign()">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
   <div class="credit">демо-прототип · данные демонстрационные</div>
 </div>
 
@@ -316,6 +362,7 @@ const I = {
   arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
   back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  avatar:'<svg viewBox="0 0 80 80" class="avt"><circle cx="40" cy="40" r="39" class="avt-bg"/><path d="M20 67c0-12 9-21 20-21s20 9 20 21" class="avt-body"/><circle cx="40" cy="29" r="12" class="avt-skin"/><g class="avt-hand h-l"><circle cx="25" cy="52" r="5.5" class="avt-skin"/></g><g class="avt-hand h-r"><circle cx="55" cy="52" r="5.5" class="avt-skin"/></g></svg>',
   pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>',
   clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
   transfer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12l-3-3"/><path d="M20 16H8l3 3"/></svg>',
@@ -367,6 +414,7 @@ function render(html,opts={}){
   const atHome=(cur==='home');
   const bb=document.getElementById('backBtn'); if(bb) bb.style.display=atHome?'none':'';
   const hb=document.getElementById('homeBtn'); if(hb) hb.style.display=atHome?'none':'';
+  setSign();
   if(opts.after) opts.after();
   stage.scrollTop=0;
 }
@@ -746,8 +794,36 @@ function openSol(auto){
 }
 function closeSol(){ document.getElementById('overlay').classList.remove('show'); }
 
+/* ===================== SIGN-LANGUAGE ACCOMPANIMENT ===================== */
+const SIGN_CAP={
+  home:'Выберите, с чем нужна помощь',
+  s1_line:'Выберите линию метро по цвету',
+  s1_route:'Маршрут готов — идите по стрелке к платформе',
+  em_type:'Что случилось? Выберите вашу ситуацию',
+  em_confirm:'Сотрудник вызван — оставайтесь на месте',
+  s2_problem:'Выберите проблему с оплатой',
+  s2_type:'Чем вы оплачивали проезд?',
+  s2_done:'Следуйте инструкции и подойдите к кассе',
+  s4_dir:'Выберите направление поезда',
+  s4_type:'Ближайшие поезда или последний поезд?',
+  s4_near:'Время прибытия ближайших поездов',
+  s4_last:'Последний поезд скоро — поторопитесь',
+  s5_cat:'Выберите категорию льготы',
+  s5_doc:'Документ при себе есть?',
+  s5_yes:'Подготовьте документ и подойдите к кассе',
+  s5_no:'Где оформить льготу',
+  s6_place:'Где вы потеряли вещь?',
+  s6_when:'Когда это произошло?',
+  s6_fresh:'Дежурный вызван — оставайтесь на месте',
+  s6_old:'Адрес бюро находок',
+};
+function signCaption(id){ if(id&&id.indexOf('s1_station')===0) return 'Выберите станцию назначения'; return SIGN_CAP[id]||'Жестовое сопровождение этого экрана'; }
+function setSign(){ const c=signCaption(cur); const a=document.getElementById('signCap'); if(a)a.textContent=c; const b=document.getElementById('signModalCap'); if(b)b.textContent=c; }
+function openSign(){ setSign(); document.getElementById('signOverlay').classList.add('show'); }
+function closeSign(){ document.getElementById('signOverlay').classList.remove('show'); }
+
 /* inject footer/overlay icons, then boot */
-document.body.innerHTML=document.body.innerHTML.replace(/\{home\}/g,svg('home')).replace(/\{hands\}/g,svg('hands')).replace(/\{back\}/g,svg('back'));
+document.body.innerHTML=document.body.innerHTML.replace(/\{home\}/g,svg('home')).replace(/\{hands\}/g,svg('hands')).replace(/\{back\}/g,svg('back')).replace(/\{avatar\}/g,svg('avatar'));
 go('home');
 </script>
 </body>
