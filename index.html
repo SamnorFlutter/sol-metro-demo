@@ -286,7 +286,7 @@
 
   <footer class="bar">
     <button class="fbtn back" id="backBtn" onclick="back()"><span class="ico">{back}</span> Назад</button>
-    <button class="fbtn home" onclick="go('home',false)"><span class="ico">{home}</span> В начало</button>
+    <button class="fbtn home" id="homeBtn" onclick="go('home',false)"><span class="ico">{home}</span> В начало</button>
     <button class="fbtn sol" onclick="openSol(false)"><span class="ico">{hands}</span> Переводчик SOL</button>
   </footer>
 
@@ -364,7 +364,9 @@ function render(html,opts={}){
   const stage=document.getElementById('stage');
   clearInterval(timerInt);
   stage.innerHTML=`<div class="screen ${goingBack?'back':''}">${html}</div>`;
-  const bb=document.getElementById('backBtn'); if(bb) bb.style.display=(cur==='home')?'none':'';
+  const atHome=(cur==='home');
+  const bb=document.getElementById('backBtn'); if(bb) bb.style.display=atHome?'none':'';
+  const hb=document.getElementById('homeBtn'); if(hb) hb.style.display=atHome?'none':'';
   if(opts.after) opts.after();
   stage.scrollTop=0;
 }
