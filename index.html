@@ -267,10 +267,12 @@
   .confirm.info h2,.confirm.info p{color:var(--primary-d)}
 
   /* sign-language accompaniment bar + avatar */
-  .signbar{display:flex;align-items:center;gap:16px;padding:12px 24px;background:linear-gradient(90deg,#F2EAFD,#FAF7FE);border-top:1px solid var(--sol-soft);cursor:pointer;flex:none;transition:background .15s}
-  .signbar:hover{background:#EFE6FC}
-  .sign-av{width:54px;height:54px;flex:none}
-  .sign-av.big{width:154px;height:154px}
+  .signbar{display:flex;align-items:center;gap:18px;padding:14px 24px;background:linear-gradient(90deg,#F2EAFD,#FAF7FE);border-top:1px solid var(--sol-soft);flex:none}
+  .sign-stage{position:relative;width:132px;height:132px;border-radius:18px;overflow:hidden;background:#fff;flex:none;box-shadow:var(--shadow-soft);display:grid;place-items:center}
+  .bar-clip{width:100%;height:100%;object-fit:contain;background:#fff;display:none}
+  .sign-av{flex:none}
+  .sign-stage .sign-av{width:104px;height:104px}
+  .sign-av.big{width:160px;height:160px}
   .avt{width:100%;height:100%;display:block}
   .avt-bg{fill:#E7D8FB}
   .avt-body{fill:#7A3CE0}
@@ -283,8 +285,10 @@
   .sign-mid{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
   .sign-badge{font-size:12px;font-weight:800;color:var(--sol-d);letter-spacing:.3px;text-transform:uppercase}
   .sign-badge b{background:var(--warn-soft);color:var(--warn);padding:2px 7px;border-radius:6px;margin-left:5px;font-weight:800}
-  .sign-cap{font-size:17px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .sign-cta{flex:none;background:linear-gradient(135deg,#8a4ef0,#6a2fce);color:#fff;font-weight:800;font-size:15px;padding:12px 18px;border-radius:14px;box-shadow:0 6px 16px rgba(122,60,224,.3)}
+  .sign-cap{font-size:19px;font-weight:800;color:var(--ink);line-height:1.2}
+  .sign-src{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:3px}
+  .sign-expand{flex:none;background:#fff;border:1.5px solid #d9c5f5;color:var(--sol-d);font-weight:800;font-size:14px;padding:12px 16px;border-radius:13px;cursor:pointer;transition:.15s}
+  .sign-expand:hover{border-color:var(--sol);box-shadow:var(--shadow-soft)}
   .sign-video{background:linear-gradient(160deg,#EFE6FC,#d6c2f5)!important}
   .sign-note{font-size:14px!important;color:var(--warn)!important;background:var(--warn-soft);padding:13px 15px;border-radius:12px;line-height:1.45;font-weight:600}
   .sign-clip{width:100%;height:100%;object-fit:contain;background:#fff;display:none}
@@ -308,13 +312,17 @@
 
   <div class="stage" id="stage"></div>
 
-  <div class="signbar" onclick="openSign()">
-    <div class="sign-av playing">{avatar}</div>
+  <div class="signbar">
+    <div class="sign-stage">
+      <video id="barVideo" class="bar-clip" muted loop autoplay playsinline preload="auto"></video>
+      <div class="sign-av playing" id="barAvatar">{avatar}</div>
+    </div>
     <div class="sign-mid">
       <span class="sign-badge">Жестовый язык · РЖЯ <b>демо</b></span>
       <span class="sign-cap" id="signCap">Жестовое сопровождение</span>
+      <span class="sign-src" id="signSrc"></span>
     </div>
-    <span class="sign-cta">Смотреть ▶</span>
+    <button class="sign-expand" onclick="openSign()">⤢ Крупно</button>
   </div>
 
   <footer class="bar">
@@ -834,7 +842,23 @@ const SIGN_VIDEO={
   s6_place:['потерять',M+'315716.mp4'], s6_when:['потерять',M+'315716.mp4'], s6_fresh:['потерять',M+'315716.mp4'], s6_old:['потерять',M+'315716.mp4'],
 };
 function signVid(id){ if(id&&id.indexOf('s1_station')===0) return SIGN_VIDEO['s1_line']; return SIGN_VIDEO[id]||null; }
-function setSign(){ const c=signCaption(cur); const a=document.getElementById('signCap'); if(a)a.textContent=c; const b=document.getElementById('signModalCap'); if(b)b.textContent=c; }
+function setSign(){
+  const c=signCaption(cur);
+  const a=document.getElementById('signCap'); if(a)a.textContent=c;
+  const b=document.getElementById('signModalCap'); if(b)b.textContent=c;
+  const vid=signVid(cur);
+  const bv=document.getElementById('barVideo'), ba=document.getElementById('barAvatar'), src=document.getElementById('signSrc');
+  if(!bv) return;
+  if(vid){
+    if(src) src.textContent='Жест РЖЯ: «'+vid[0]+'» · источник spreadthesign.com';
+    bv.onerror=()=>{ bv.style.display='none'; ba.style.display='block'; };
+    if(bv.getAttribute('src')!==vid[1]) bv.src=vid[1];
+    bv.style.display='block'; ba.style.display='none'; bv.play().catch(()=>{});
+  } else {
+    if(src) src.textContent='Демонстрационный аватар';
+    bv.removeAttribute('src'); bv.style.display='none'; ba.style.display='block';
+  }
+}
 function openSign(){
   setSign();
   const vid=signVid(cur);
