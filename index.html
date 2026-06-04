@@ -197,9 +197,10 @@
   footer.bar{display:flex;gap:16px;padding:18px 30px;background:linear-gradient(0deg,#FFFFFF,#FBFCFE);border-top:1px solid var(--line);flex:none}
   .fbtn{flex:1;display:flex;align-items:center;justify-content:center;gap:14px;border-radius:18px;padding:21px;font:inherit;font-size:21px;font-weight:800;cursor:pointer;border:1.5px solid transparent;transition:transform .15s,box-shadow .15s,background .15s;letter-spacing:-.2px}
   .fbtn:active{transform:scale(.98)}
-  .fbtn.home{background:var(--surface-2);color:var(--ink);border-color:var(--line-2)}
-  .fbtn.home:hover{background:#fff;border-color:var(--ink);box-shadow:var(--shadow-soft)}
-  .fbtn.sol{background:linear-gradient(135deg,#8a4ef0,#6a2fce);color:#fff;box-shadow:0 10px 24px rgba(122,60,224,.36)}
+  .fbtn.back,.fbtn.home{background:var(--surface-2);color:var(--ink);border-color:var(--line-2)}
+  .fbtn.back:hover,.fbtn.home:hover{background:#fff;border-color:var(--ink);box-shadow:var(--shadow-soft)}
+  .fbtn.back .ico{color:var(--primary)}
+  .fbtn.sol{flex:1.4;background:linear-gradient(135deg,#8a4ef0,#6a2fce);color:#fff;box-shadow:0 10px 24px rgba(122,60,224,.36)}
   .fbtn.sol:hover{box-shadow:0 14px 32px rgba(122,60,224,.46);transform:translateY(-2px)}
   .fbtn .ico{width:32px;height:32px}
   .fbtn.home .ico{color:var(--primary)}
@@ -284,6 +285,7 @@
   <div class="stage" id="stage"></div>
 
   <footer class="bar">
+    <button class="fbtn back" id="backBtn" onclick="back()"><span class="ico">{back}</span> Назад</button>
     <button class="fbtn home" onclick="go('home',false)"><span class="ico">{home}</span> В начало</button>
     <button class="fbtn sol" onclick="openSol(false)"><span class="ico">{hands}</span> Переводчик SOL</button>
   </footer>
@@ -313,6 +315,7 @@ const I = {
   hands:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V5.5a1.5 1.5 0 0 1 3 0V10"/><path d="M10 10V4.5a1.5 1.5 0 0 1 3 0V10"/><path d="M13 10V6a1.5 1.5 0 0 1 3 0v6"/><path d="M16 9.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-5.2-3l-2.2-3.8a1.5 1.5 0 0 1 2.6-1.5L7 12"/></svg>',
   arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
   chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>',
   pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>',
   clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
   transfer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12l-3-3"/><path d="M20 16H8l3 3"/></svg>',
@@ -361,6 +364,7 @@ function render(html,opts={}){
   const stage=document.getElementById('stage');
   clearInterval(timerInt);
   stage.innerHTML=`<div class="screen ${goingBack?'back':''}">${html}</div>`;
+  const bb=document.getElementById('backBtn'); if(bb) bb.style.display=(cur==='home')?'none':'';
   if(opts.after) opts.after();
   stage.scrollTop=0;
 }
@@ -368,6 +372,14 @@ function go(id,push=true){
   if(push&&cur&&cur!==id) stack.push(cur);
   if(!push){goingBack=true; if(id==='home') stack=[];}
   cur=id; SCREENS[id](); goingBack=false;
+}
+function back(){
+  if(!stack.length){ go('home',false); return; }
+  goingBack=true;
+  const prev=stack.pop();
+  cur=prev;
+  if(SCREENS[prev]) SCREENS[prev](); else go('home',false);
+  goingBack=false;
 }
 function stepBar(n,t){let p='';for(let i=1;i<=t;i++)p+=`<div class="pill ${i<n?'done':''} ${i===n?'on':''}"></div>`;return `<div class="steps">${p}</div>`;}
 function helpRow(){return `<div class="btn-line"><button class="btn help" onclick="openSol(false)"><span class="ico">${svg('hands')}</span> Позвать сотрудника через SOL</button></div>`;}
@@ -733,7 +745,7 @@ function openSol(auto){
 function closeSol(){ document.getElementById('overlay').classList.remove('show'); }
 
 /* inject footer/overlay icons, then boot */
-document.body.innerHTML=document.body.innerHTML.replace(/\{home\}/g,svg('home')).replace(/\{hands\}/g,svg('hands'));
+document.body.innerHTML=document.body.innerHTML.replace(/\{home\}/g,svg('home')).replace(/\{hands\}/g,svg('hands')).replace(/\{back\}/g,svg('back'));
 go('home');
 </script>
 </body>
