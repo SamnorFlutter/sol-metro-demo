@@ -229,6 +229,42 @@
   .placeholder .ph-illus img{width:100%;height:100%;object-fit:cover}
   .placeholder h2{margin:0;font-size:26px;color:var(--ink);font-weight:800;letter-spacing:-.3px}
 
+  /* choice tiles (inner steps) */
+  .choice{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;min-height:128px;display:flex;flex-direction:column;gap:14px;justify-content:center;cursor:pointer;box-shadow:var(--shadow-card);transition:transform .16s,box-shadow .16s,border-color .16s;font:inherit;color:inherit;text-align:left}
+  .choice:hover{transform:translateY(-5px);box-shadow:var(--shadow-hi);border-color:var(--primary)}
+  .choice:active{transform:scale(.99)}
+  .choice .ico{width:52px;height:52px;color:var(--primary);flex:none}
+  .choice .lbl{font-size:20.5px;font-weight:800;letter-spacing:-.3px;line-height:1.16}
+  @media(max-width:560px){.grid.two{grid-template-columns:1fr}}
+
+  /* numbered instruction */
+  .instr{display:flex;flex-direction:column;gap:14px}
+  .istep{display:flex;align-items:center;gap:16px;font-size:18px;font-weight:600;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 20px;box-shadow:var(--shadow-soft)}
+  .inum{width:36px;height:36px;border-radius:50%;background:var(--primary-soft);color:var(--primary-d);display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+
+  /* schedule */
+  .trains{display:flex;flex-direction:column;gap:12px}
+  .train-row{display:flex;align-items:center;gap:18px;background:linear-gradient(180deg,#FBFCFE,#F4F8FD);border:1px solid var(--line);border-radius:18px;padding:20px 24px;box-shadow:var(--shadow-card)}
+  .train-row .ico{width:40px;height:40px;color:var(--primary);flex:none}
+  .train-row .tmin{font-size:25px;font-weight:900;letter-spacing:-.5px;flex:1}
+  .train-row .tabs{font-size:20px;font-weight:700;color:var(--muted)}
+  .warn-box{display:flex;align-items:center;gap:16px;background:var(--danger-soft);border:1.5px solid var(--danger);border-radius:18px;padding:18px 22px;color:var(--danger-d)}
+  .warn-box .ico{width:40px;height:40px;color:var(--danger);flex:none}
+  .warn-box .wt{font-size:22px;font-weight:900;letter-spacing:-.3px}
+  .warn-box .wd{font-size:18px;font-weight:600}
+
+  /* info card (адрес/служба) */
+  .infocard{display:flex;gap:18px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:var(--shadow-soft)}
+  .infocard .ico{width:46px;height:46px;color:var(--primary);flex:none}
+  .infocard .ititle{font-size:21px;font-weight:800;letter-spacing:-.3px}
+  .infocard .idesc{font-size:17px;color:var(--muted);margin-top:6px;font-weight:500;line-height:1.4}
+  .infocard .imeta{font-size:16px;font-weight:700;margin-top:10px;color:var(--ink)}
+
+  /* blue confirm variant (дежурный) */
+  .confirm.info{background:linear-gradient(180deg,#FBFCFE,#EAF3FF);border-color:var(--primary)}
+  .confirm.info .big-ico svg{color:var(--primary)}
+  .confirm.info h2,.confirm.info p{color:var(--primary-d)}
+
   .credit{position:absolute;bottom:7px;right:14px;font-size:11px;color:var(--muted);opacity:.5;z-index:1;font-weight:500}
 </style>
 </head>
@@ -286,6 +322,28 @@ const I = {
   sick:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 10h.01M15.5 10h.01"/><path d="M8.5 16c1-1 5-1 6 0"/></svg>',
   conflict:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 9v5"/><path d="M12 17h.01"/></svg>',
   shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V6l-8-3Z"/><path d="M9 12l2 2 4-4"/></svg>',
+  card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/><path d="M6 15h4"/></svg>',
+  cardx:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="13" rx="2.5"/><path d="M3 9h18"/><path d="M6 20.5 18 4.5"/></svg>',
+  double:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="11" r="6"/><path d="M15 5.4a6 6 0 0 1 0 11.2"/><path d="M7.4 11h3.2M9 9.4v3.2"/></svg>',
+  topup:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
+  lostcard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><path d="M10 14a1.6 1.6 0 1 1 2.3 1.5c-.5.3-.8.6-.8 1.3M11.5 19h.01"/></svg>',
+  bankcard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M2.5 10h11"/><path d="M16 9.4a4 4 0 0 1 0 5.2M18.4 8a7 7 0 0 1 0 8"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="3" width="11" height="18" rx="2.5"/><path d="M10.5 18h3"/></svg>',
+  train:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="12" rx="3"/><path d="M5 11h14"/><path d="M8.5 20l-2 2M15.5 20l2 2"/><path d="M9 13.5h.01M15 13.5h.01"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.5A8 8 0 1 1 10.5 4a6.2 6.2 0 0 0 9.5 9.5Z"/></svg>',
+  dirL:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></svg>',
+  wheelchair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.3" r="1.8"/><path d="M12 7.5v4h4l2.4 5"/><circle cx="10.5" cy="15.5" r="5"/></svg>',
+  child:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5.5" r="2.2"/><path d="M12 8v6M9 11h6M10 20l2-6 2 6"/></svg>',
+  elder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="5" r="2"/><path d="M10.5 8v8M10.5 12l-3 3M10.5 15.5l3 4.5M16 9v11"/></svg>',
+  medal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14.5" r="5"/><path d="M9.5 10 7 3M14.5 10 17 3"/><path d="m12 12.6.8 1.7 1.7.2-1.3 1.2.4 1.7L12 16.6l-1.6.8.4-1.7-1.3-1.2 1.7-.2.8-1.7Z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5 5-5"/></svg>',
+  cross:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>',
+  calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>',
+  platform:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19h19"/><rect x="6" y="5" width="12" height="9" rx="2.5"/><path d="M6 10h12M9.5 14v2M14.5 14v2"/></svg>',
+  escalator:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l8-8h4"/><circle cx="6.5" cy="15.5" r="1.6"/><path d="M16 10h4M14 13l2.5 2.5"/></svg>',
+  worker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4Z"/><path d="M3 8v8l9 4 9-4V8"/><path d="M12 12v8"/></svg>',
+  cashbox:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 14h16M10 14v6"/></svg>',
 };
 function svg(n){return I[n]||''}
 
@@ -325,20 +383,203 @@ const SCREENS = {
       </div>
       <div class="grid">
         ${card('route','Я заблудился — помогите добраться',"go('s1_line')")}
-        ${card('payment','Проблема с оплатой или картой',"go('soon_pay')")}
+        ${card('payment','Проблема с оплатой или картой',"go('s2_problem')")}
         ${card('emergency','Мне плохо / нужна срочная помощь','startEmergency()','danger')}
-        ${card('schedule','Когда следующий поезд / расписание',"go('soon_sch')")}
-        ${card('benefit','Льготный проезд',"go('soon_ben')")}
-        ${card('lost','Я потерял вещи',"go('soon_lost')")}
+        ${card('schedule','Когда следующий поезд / расписание',"go('s4_dir')")}
+        ${card('benefit','Льготный проезд',"go('s5_cat')")}
+        ${card('lost','Я потерял вещи',"go('s6_place')")}
       </div>
     `);
   },
 
-  /* placeholders for not-yet-built scenarios, each keeps its own illustration */
-  soon_pay(){ placeholder('payment','Проблема с оплатой или картой'); },
-  soon_sch(){ placeholder('schedule','Когда следующий поезд / расписание'); },
-  soon_ben(){ placeholder('benefit','Льготный проезд'); },
-  soon_lost(){ placeholder('lost','Я потерял вещи'); },
+  /* ===== Сценарий 2: Проблема с оплатой или картой ===== */
+  s2_problem(){
+    render(`
+      ${stepBar(1,3)}
+      ${scHead('payment','Проблема с оплатой или картой','Что случилось?')}
+      <div class="grid two">
+        ${choice('cardx','Карта не срабатывает',"go('s2_type')")}
+        ${choice('double','Списали дважды',"go('s2_type')")}
+        ${choice('topup','Нужно пополнить',"go('s2_type')")}
+        ${choice('lostcard','Потерял карту',"go('s2_type')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s2_type(){
+    render(`
+      ${stepBar(2,3)}
+      ${scHead('payment','Проблема с оплатой или картой','Чем вы оплачивали?')}
+      <div class="grid two">
+        ${choice('card','Тройка',"go('s2_done')")}
+        ${choice('bankcard','Банковская карта',"go('s2_done')")}
+        ${choice('phone','Телефон или часы',"go('s2_done')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s2_done(){
+    render(`
+      ${stepBar(3,3)}
+      ${scHead('payment','Проблема с оплатой или картой','Что делать')}
+      <span class="demo-tag">инструкция — демонстрационная</span>
+      <div class="result">
+        ${instr(['Приложите карту к жёлтому кругу турникета ещё раз','Если не сработало — подойдите к кассе','Покажите этот экран сотруднику'])}
+        <div class="big-arrow"><span class="ico">${svg('cashbox')}</span> Касса №2 — идите по стрелке →</div>
+      </div>
+      ${helpRow()}
+    `);
+  },
+
+  /* ===== Сценарий 4: Когда следующий поезд / расписание ===== */
+  s4_dir(){
+    render(`
+      ${stepBar(1,3)}
+      ${scHead('schedule','Когда следующий поезд / расписание','Выберите направление')}
+      <span class="demo-tag">демо-направления текущей линии</span>
+      <div class="grid two">
+        ${choice('arrow','Бульвар Рокоссовского',"chooseDir('Бульвар Рокоссовского')")}
+        ${choice('dirL','Коммунарка',"chooseDir('Коммунарка')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s4_type(){
+    render(`
+      ${stepBar(2,3)}
+      ${scHead('schedule','Когда следующий поезд / расписание','Что показать?')}
+      <p class="sub">Направление: ${schedDir}</p>
+      <div class="grid two">
+        ${choice('clock','Ближайшие поезда',"go('s4_near')")}
+        ${choice('moon','Последний поезд сегодня',"go('s4_last')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s4_near(){
+    render(`
+      ${stepBar(3,3)}
+      ${scHead('schedule','Когда следующий поезд / расписание','Ближайшие поезда')}
+      <p class="sub">Направление: ${schedDir}</p>
+      <span class="demo-tag">время — демонстрационное</span>
+      <div class="trains">
+        ${trainRow('через 2 минуты','11:24')}
+        ${trainRow('через 6 минут','11:28')}
+        ${trainRow('через 11 минут','11:33')}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s4_last(){
+    render(`
+      ${stepBar(3,3)}
+      ${scHead('schedule','Когда следующий поезд / расписание','Последний поезд сегодня')}
+      <p class="sub">Направление: ${schedDir}</p>
+      <span class="demo-tag">время — демонстрационное</span>
+      <div class="warn-box"><span class="ico">${svg('clock')}</span><div><div class="wt">Поторопитесь!</div><div class="wd">Последний поезд через 12 минут</div></div></div>
+      <div class="trains">${trainRow('Последний поезд · через 12 минут','00:38')}</div>
+      ${helpRow()}
+    `);
+  },
+
+  /* ===== Сценарий 5: Льготный проезд ===== */
+  s5_cat(){
+    render(`
+      ${stepBar(1,3)}
+      ${scHead('benefit','Льготный проезд','Выберите категорию')}
+      <div class="grid two">
+        ${choice('wheelchair','Инвалид',"chooseCat('Инвалид')")}
+        ${choice('child','Ребёнок до 7 лет',"chooseCat('Ребёнок до 7 лет')")}
+        ${choice('elder','Пенсионер',"chooseCat('Пенсионер')")}
+        ${choice('medal','Ветеран',"chooseCat('Ветеран')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s5_doc(){
+    render(`
+      ${stepBar(2,3)}
+      ${scHead('benefit','Льготный проезд','Документ при себе есть?')}
+      <p class="sub">Категория: ${benCat}</p>
+      <div class="grid two">
+        ${choice('check','Есть',"go('s5_yes')")}
+        ${choice('cross','Нет',"go('s5_no')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s5_yes(){
+    render(`
+      ${stepBar(3,3)}
+      ${scHead('benefit','Льготный проезд','Что делать')}
+      <span class="demo-tag">инструкция — демонстрационная</span>
+      <div class="result">
+        ${instr(['Подготовьте документ, подтверждающий льготу («'+benCat+'»)','Подойдите к кассе и предъявите документ','Сотрудник оформит льготный проход'])}
+        <div class="big-arrow"><span class="ico">${svg('cashbox')}</span> Окно кассы №1 — идите по стрелке →</div>
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s5_no(){
+    render(`
+      ${stepBar(3,3)}
+      ${scHead('benefit','Льготный проезд','Где оформить льготу')}
+      <span class="demo-tag">адрес — демонстрационный</span>
+      <div class="result">
+        ${infoCard('cashbox','Центр госуслуг «Мои документы»','Льготу оформляют в центре госуслуг по месту жительства.','ул. Демонстрационная, 1 · ежедневно 8:00–20:00')}
+      </div>
+      ${helpRow()}
+    `);
+  },
+
+  /* ===== Сценарий 6: Я потерял вещи ===== */
+  s6_place(){
+    render(`
+      ${stepBar(1,3)}
+      ${scHead('lost','Я потерял вещи','Где вы потеряли вещь?')}
+      <div class="grid two">
+        ${choice('train','В поезде',"choosePlace('В поезде')")}
+        ${choice('platform','На платформе',"choosePlace('На платформе')")}
+        ${choice('escalator','В вестибюле / на эскалаторе',"choosePlace('В вестибюле / на эскалаторе')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s6_when(){
+    render(`
+      ${stepBar(2,3)}
+      ${scHead('lost','Я потерял вещи','Когда это произошло?')}
+      <p class="sub">Место: ${lostPlace}</p>
+      <div class="grid two">
+        ${choice('clock','Только что (менее 30 минут)',"go('s6_fresh')")}
+        ${choice('calendar','Сегодня ранее / вчера и позже',"go('s6_old')")}
+      </div>
+      ${helpRow()}
+    `);
+  },
+  s6_fresh(){
+    render(`
+      ${stepBar(3,3)}
+      <div class="confirm info">
+        <div class="big-ico">${svg('worker')}</div>
+        <h2>Дежурный вызван</h2>
+        <p>Оставайтесь на месте. К вам подойдёт сотрудник.</p>
+        <p>Передано дежурному: место — «${lostPlace}», номер терминала.</p>
+      </div>
+      <div class="auto-sol"><span class="ico">${svg('hands')}</span> Переводчик SOL поможет описать пропажу</div>
+    `);
+  },
+  s6_old(){
+    render(`
+      ${stepBar(3,3)}
+      ${scHead('lost','Я потерял вещи','Бюро находок')}
+      <span class="demo-tag">адрес — демонстрационный</span>
+      <div class="result">
+        ${infoCard('box','Бюро находок метрополитена','Обратитесь в бюро находок с описанием пропажи.','ул. Демонстрационная, 5 · пн–пт 8:00–20:00')}
+      </div>
+      ${helpRow()}
+    `);
+  },
 
   /* ===== Сценарий 1 ===== */
   s1_line(){
@@ -400,17 +641,28 @@ function card(img,label,onclick,variant){
 function emCard(ic,label){
   return `<button class="em-card" onclick="go('em_confirm')"><span class="ico">${svg(ic)}</span><span class="lbl">${label}</span></button>`;
 }
-function placeholder(img,title){
-  render(`
-    ${stepBar(1,3)}
-    <div class="placeholder">
-      <div class="ph-illus"><img src="images/${img}.png" alt=""></div>
-      <h2>«${title}» — в следующей сборке</h2>
-      <p class="sub" style="max-width:440px">В демо полностью собраны два сценария: «Добраться до станции» и «Срочная помощь». Остальные подключаются по той же логике — 3 шага, иллюстрация + текст, кнопки SOL и «В начало» на каждом экране.</p>
-      <button class="btn" onclick="go('home',false)"><span class="ico">${svg('home')}</span> Вернуться к выбору</button>
-    </div>
-  `);
+/* shared builders for inner-step screens */
+function scHead(img,title,q){
+  return `<div class="sc-head"><div class="sc-thumb"><img src="images/${img}.png" alt=""></div><div class="tt"><h1 class="q">${q}</h1><p class="sub">${title}</p></div></div>`;
 }
+function choice(ic,label,onclick){
+  return `<button class="choice" onclick="${onclick}"><span class="ico">${svg(ic)}</span><span class="lbl">${label}</span></button>`;
+}
+function instr(steps){
+  return `<div class="instr">${steps.map((s,i)=>`<div class="istep"><span class="inum">${i+1}</span><span>${s}</span></div>`).join('')}</div>`;
+}
+function trainRow(min,abs){
+  return `<div class="train-row"><span class="ico">${svg('train')}</span><span class="tmin">${min}</span><span class="tabs">${abs}</span></div>`;
+}
+function infoCard(ic,title,desc,meta){
+  return `<div class="infocard"><div class="ico">${svg(ic)}</div><div><div class="ititle">${title}</div><div class="idesc">${desc}</div><div class="imeta">${meta}</div></div></div>`;
+}
+
+/* context for branching scenarios */
+let schedDir='', benCat='', lostPlace='';
+function chooseDir(d){ schedDir=d; go('s4_type'); }
+function chooseCat(c){ benCat=c; go('s5_doc'); }
+function choosePlace(p){ lostPlace=p; go('s6_when'); }
 function stationScreens(){
   const out={};
   LINES.forEach(l=>{
