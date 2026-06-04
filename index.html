@@ -287,6 +287,8 @@
   .sign-cta{flex:none;background:linear-gradient(135deg,#8a4ef0,#6a2fce);color:#fff;font-weight:800;font-size:15px;padding:12px 18px;border-radius:14px;box-shadow:0 6px 16px rgba(122,60,224,.3)}
   .sign-video{background:linear-gradient(160deg,#EFE6FC,#d6c2f5)!important}
   .sign-note{font-size:14px!important;color:var(--warn)!important;background:var(--warn-soft);padding:13px 15px;border-radius:12px;line-height:1.45;font-weight:600}
+  .sign-clip{width:100%;height:100%;object-fit:contain;background:#fff;display:none}
+  .sign-word{font-size:18px;font-weight:800;color:var(--sol-d);background:var(--sol-soft);padding:10px 14px;border-radius:12px;align-self:flex-start}
 
   .credit{position:absolute;bottom:7px;right:14px;font-size:11px;color:var(--muted);opacity:.5;z-index:1;font-weight:500}
 </style>
@@ -340,12 +342,14 @@
     <div class="modal">
       <div class="video sign-video">
         <div class="live">РЖЯ · демонстрация</div>
-        <div class="sign-av big playing">{avatar}</div>
+        <video id="signVideo" class="sign-clip" muted loop playsinline preload="none"></video>
+        <div class="sign-av big playing" id="signAvatar">{avatar}</div>
       </div>
       <div class="body">
         <h3>Жестовое сопровождение</h3>
         <p id="signModalCap">…</p>
-        <p class="sign-note">⚠ Демонстрационный цифровой аватар. В рабочей версии здесь — видеоролик на русском жестовом языке (РЖЯ) для этого шага, снятый и проверенный носителем языка.</p>
+        <div class="sign-word" id="signWord"></div>
+        <p class="sign-note">⚠ Демонстрация. Показан жест <b>отдельного слова</b> из словаря РЖЯ (источник: spreadthesign.com · European Sign Language Centre). В рабочей версии — связное видео РЖЯ под фразу шага, снятое и проверенное носителем языка.</p>
         <button class="close" onclick="closeSign()">Закрыть</button>
       </div>
     </div>
@@ -818,9 +822,31 @@ const SIGN_CAP={
   s6_old:'Адрес бюро находок',
 };
 function signCaption(id){ if(id&&id.indexOf('s1_station')===0) return 'Выберите станцию назначения'; return SIGN_CAP[id]||'Жестовое сопровождение этого экрана'; }
+/* реальные ролики РЖЯ (spreadthesign.com, язык 12 = русский жестовый) — по ключевому слову экрана */
+const M='https://media.spreadthesign.com/video/mp4/12/';
+const SIGN_VIDEO={
+  home:['помощь',M+'2098.mp4'],
+  s1_line:['метро',M+'16363.mp4'], s1_route:['выход',M+'13003.mp4'],
+  em_type:['врач',M+'318928.mp4'], em_confirm:['врач',M+'318928.mp4'],
+  s2_problem:['билет',M+'15021.mp4'], s2_type:['билет',M+'15021.mp4'], s2_done:['касса',M+'7825.mp4'],
+  s4_dir:['поезд',M+'5617.mp4'], s4_type:['поезд',M+'5617.mp4'], s4_near:['поезд',M+'5617.mp4'], s4_last:['поезд',M+'5617.mp4'],
+  s5_cat:['документ',M+'295361.mp4'], s5_doc:['документ',M+'295361.mp4'], s5_yes:['документ',M+'295361.mp4'], s5_no:['документ',M+'295361.mp4'],
+  s6_place:['потерять',M+'315716.mp4'], s6_when:['потерять',M+'315716.mp4'], s6_fresh:['потерять',M+'315716.mp4'], s6_old:['потерять',M+'315716.mp4'],
+};
+function signVid(id){ if(id&&id.indexOf('s1_station')===0) return SIGN_VIDEO['s1_line']; return SIGN_VIDEO[id]||null; }
 function setSign(){ const c=signCaption(cur); const a=document.getElementById('signCap'); if(a)a.textContent=c; const b=document.getElementById('signModalCap'); if(b)b.textContent=c; }
-function openSign(){ setSign(); document.getElementById('signOverlay').classList.add('show'); }
-function closeSign(){ document.getElementById('signOverlay').classList.remove('show'); }
+function openSign(){
+  setSign();
+  const vid=signVid(cur);
+  const v=document.getElementById('signVideo'), av=document.getElementById('signAvatar'), w=document.getElementById('signWord');
+  if(vid){
+    w.textContent='Жест РЖЯ: «'+vid[0]+'»'; w.style.display='';
+    v.onerror=()=>{ v.style.display='none'; av.style.display='block'; };
+    v.src=vid[1]; v.style.display='block'; av.style.display='none'; v.play().catch(()=>{});
+  } else { w.style.display='none'; v.removeAttribute('src'); v.style.display='none'; av.style.display='block'; }
+  document.getElementById('signOverlay').classList.add('show');
+}
+function closeSign(){ const v=document.getElementById('signVideo'); if(v) v.pause(); document.getElementById('signOverlay').classList.remove('show'); }
 
 /* inject footer/overlay icons, then boot */
 document.body.innerHTML=document.body.innerHTML.replace(/\{home\}/g,svg('home')).replace(/\{hands\}/g,svg('hands')).replace(/\{back\}/g,svg('back')).replace(/\{avatar\}/g,svg('avatar'));
